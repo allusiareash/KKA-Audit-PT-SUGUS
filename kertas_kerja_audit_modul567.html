@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kertas Kerja Audit — PT SUGUS | Modul 5, 6 & 7</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@400;600;700&display=swap');
+
+:root {
+  --paper: #fefefe;
+  --border: #999;
+  --border-light: #ccc;
+  --header-bg: #d0d0d0;
+  --section-bg: #888;
+  --ink: #111;
+  --green: #1a6b2e;
+  --red: #8b1a1a;
+  --gold: #7a5c10;
+  --input-bg: #fffde7;
+  --correct-bg: #e8f5e9;
+  --wrong-bg: #ffebee;
+  --locked-bg: #f5f5f5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans', Arial, sans-serif;
+  background: #e8e8e8;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.id-section {
+  background: #2c3e50;
+  color: white;
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.kap-badge {
+  background: #fff;
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.id-title { flex: 1; }
+.id-title h1 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.id-title p { font-size: 11px; color: #ccc; }
+
+.id-form-wrap {
+  background: #34495e;
+  padding: 14px 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 3px solid #e74c3c;
+}
+.id-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #ecf0f1;
+}
+.id-field label { white-space: nowrap; font-weight: 600; }
+.id-input {
+  border: none;
+  border-bottom: 2px solid #7f8c8d;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  padding: 3px 6px;
+  outline: none;
+  min-width: 160px;
+}
+.id-input:focus { border-bottom-color: #f39c12; }
+.id-input.locked { color: #bdc3c7; pointer-events: none; }
+
+.score-bar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: #2c3e50;
+  border-bottom: 2px solid #e74c3c;
+  padding: 8px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.score-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #bdc3c7;
+  font-family: monospace;
+}
+.score-chip {
+  background: #4a4a4a;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 55px;
+  text-align: center;
+  transition: background .3s;
+}
+.score-chip.done { background: #27ae60; }
+.score-total {
+  margin-left: auto;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.tabs {
+  display: flex;
+  background: #ecf0f1;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 11px 22px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  transition: all .2s;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.tab-btn:hover { color: #2c3e50; }
+.tab-btn.active { color: #2c3e50; border-bottom-color: #e74c3c; background: #fff; }
+
+.tab-pane { display: none; padding: 20px 30px; max-width: 1050px; margin: 0 auto; }
+.tab-pane.active { display: block; }
+
+.wp-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,.12);
+}
+
+.kap-bar {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kap-logo-sm {
+  border: 1px solid #666;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #444;
+  letter-spacing: .5px;
+}
+.kap-name-sm { font-size: 9px; color: #666; }
+
+.book-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.book-table th {
+  background: var(--header-bg);
+  border: 1px solid var(--border);
+  padding: 7px 10px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+}
+.book-table th.left { text-align: left; }
+.book-table td {
+  border: 1px solid var(--border-light);
+  padding: 5px 8px;
+  vertical-align: middle;
+}
+.book-table .section-row td {
+  background: var(--section-bg);
+  color: #fff;
+  font-weight: 700;
+  font-size: 11.5px;
+  padding: 5px 10px;
+  border-color: var(--border);
+}
+.book-table td.no { width: 32px; text-align: center; color: #333; font-size: 12px; }
+.book-table td.idx-cell { width: 90px; text-align: center; }
+.book-table td.paraf-cell { width: 70px; text-align: center; }
+.book-table td.right { text-align: right; font-family: monospace; }
+.book-table td.center { text-align: center; }
+.book-table td.num-cell { width: 130px; text-align: right; font-family: monospace; }
+
+.wp-footer {
+  border-top: 1px solid var(--border);
+  display: grid;
+  font-size: 11.5px;
+}
+.wp-footer-row1 {
+  display: grid;
+  grid-template-columns: 1fr 140px 140px 100px;
+  border-bottom: 1px solid var(--border-light);
+}
+.wp-footer-row2 {
+  display: grid;
+  grid-template-columns: 1fr 140px 140px 100px;
+}
+.wp-f-cell {
+  padding: 5px 10px;
+  border-right: 1px solid var(--border-light);
+}
+.wp-f-cell:last-child { border-right: none; }
+.wp-f-label { font-size: 10px; color: #666; }
+.wp-f-value { font-weight: 600; }
+.wp-f-value.large { font-size: 15px; font-family: 'Noto Serif', serif; font-style: italic; font-weight: 700; }
+.wp-f-index { font-size: 18px; font-family: 'Noto Serif', serif; font-style: italic; font-weight: 700; text-align: right; }
+
+.cell-input {
+  border: 1px solid #bbb;
+  background: var(--input-bg);
+  padding: 3px 6px;
+  width: 100%;
+  font-size: 12px;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+.cell-input:focus { border-color: #2980b9; background: #e8f4fd; }
+.cell-input.correct { background: var(--correct-bg) !important; border-color: var(--green) !important; color: var(--green); font-weight: 700; }
+.cell-input.wrong { background: var(--wrong-bg) !important; border-color: var(--red) !important; color: var(--red); }
+.cell-input.locked { background: var(--locked-bg) !important; color: #555; pointer-events: none; cursor: default; }
+.cell-input.right-align { text-align: right; }
+
+.catatan-lines { width: 100%; }
+.catatan-line {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  height: 22px;
+  display: block;
+  padding: 2px 6px;
+  font-size: 12px;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+}
+.catatan-line.locked { pointer-events: none; }
+
+.sect-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin: 18px 0 6px;
+}
+
+.btn-row { display: flex; gap: 10px; margin: 16px 0; flex-wrap: wrap; align-items: center; }
+.btn {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .3px;
+  transition: opacity .2s;
+}
+.btn:hover { opacity: .85; }
+.btn-check { background: #2c3e50; color: #fff; }
+.btn-reset { background: #ecf0f1; color: #555; border: 1px solid #bbb; }
+.btn-check.locked { opacity: .5; pointer-events: none; }
+
+.result-card {
+  display: none;
+  border-radius: 4px;
+  padding: 14px 20px;
+  margin-top: 10px;
+  border-left: 5px solid;
+  position: relative;
+  overflow: hidden;
+}
+.result-card.show { display: block; }
+.result-card.pass { background: #f0fff4; border-color: var(--green); }
+.result-card.warn { background: #fffbf0; border-color: var(--gold); }
+.result-card.fail { background: #fff5f5; border-color: var(--red); }
+.result-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.result-card.pass .result-title { color: var(--green); }
+.result-card.warn .result-title { color: var(--gold); }
+.result-card.fail .result-title { color: var(--red); }
+.result-detail { font-size: 12px; color: #555; }
+.stamp-overlay {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-10deg);
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  border: 3px solid;
+  padding: 2px 10px;
+  border-radius: 4px;
+  opacity: .8;
+  font-family: 'Noto Serif', serif;
+}
+.result-card.pass .stamp-overlay { color: var(--green); border-color: var(--green); }
+.result-card.fail .stamp-overlay { color: var(--red); border-color: var(--red); }
+.result-card.warn .stamp-overlay { color: var(--gold); border-color: var(--gold); }
+
+.notice {
+  background: #fef9e7;
+  border: 1px solid #f39c12;
+  border-radius: 3px;
+  padding: 8px 14px;
+  font-size: 11.5px;
+  color: #7d6608;
+  margin-bottom: 14px;
+}
+
+/* ── PDF BUTTON ── */
+.btn-pdf {
+  background: #c0392b;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-pdf:hover { background: #a93226; }
+
+/* ── ANSWER REVEAL ── */
+.ans-hint {
+  display: none;
+  font-size: 10px;
+  color: var(--green);
+  font-weight: 700;
+  background: #f0fff4;
+  border: 1px dashed var(--green);
+  border-radius: 3px;
+  padding: 2px 5px;
+  margin-top: 2px;
+  text-align: center;
+  letter-spacing: .3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.ans-hint.show { display: block; }
+@media print { .ans-hint { display: none !important; } }
+
+/* ── PRINT / SAVE AS PDF ── */
+@media print {
+  /* Hide everything that's not printable */
+  .score-bar, .tabs, .btn-row, .result-card,
+  .notice, .id-form-wrap { display: none !important; }
+
+  /* Show only the active pane */
+  .tab-pane { display: none !important; }
+  .tab-pane.print-target { display: block !important; }
+
+  /* Reset backgrounds for clean paper look */
+  body { background: #fff !important; font-size: 11px; }
+  .id-section { background: #2c3e50 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .wp-card { box-shadow: none !important; page-break-inside: avoid; margin-bottom: 14px; }
+  .book-table .section-row td { background: #888 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .book-table th { background: #d0d0d0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Show input values as plain text */
+  .cell-input {
+    border: none !important;
+    background: transparent !important;
+    font-size: 11px;
+  }
+  .cell-input.correct { color: #1a6b2e !important; font-weight: 700; background: transparent !important; }
+  .cell-input.wrong   { color: #8b1a1a !important; background: transparent !important; }
+
+  /* Identity fields */
+  .id-input { color: #fff !important; border-bottom-color: transparent !important; }
+
+  /* Page setup */
+  @page { margin: 15mm 12mm; size: A4 landscape; }
+  .tab-pane { padding: 0 !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="id-section">
+  <div class="kap-badge">K&R</div>
+  <div class="id-title">
+    <h1>Kertas Kerja Praktikum Audit — PT SUGUS</h1>
+    <p>KAP Krisanti &amp; Rekan · Periode 31/12/2018 · Modul 5, 6 &amp; 7</p>
+  </div>
+</div>
+<div class="id-form-wrap">
+  <div class="id-field">
+    <label>Nama Mahasiswa:</label>
+    <input class="id-input" id="mhs_nama" placeholder="Nama lengkap…">
+  </div>
+  <div class="id-field">
+    <label>NIM:</label>
+    <input class="id-input" id="mhs_nim" placeholder="NIM…" style="min-width:120px">
+  </div>
+  <div class="id-field">
+    <label>Kelas:</label>
+    <input class="id-input" id="mhs_kelas" placeholder="Kelas…" style="min-width:80px">
+  </div>
+  <div class="id-field">
+    <label>Tanggal Pengerjaan:</label>
+    <input class="id-input" id="mhs_tgl" type="date" style="min-width:140px">
+  </div>
+</div>
+
+<div class="score-bar">
+  <div class="score-item">Modul 5 <span class="score-chip" id="sc5">–</span></div>
+  <div class="score-item">Modul 6 <span class="score-chip" id="sc6">–</span></div>
+  <div class="score-item">Modul 7 <span class="score-chip" id="sc7">–</span></div>
+  <div class="score-total">Total: <span id="scTotal">–</span></div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('m5',this)">Modul 5 — Beban Dibayar Dimuka</button>
+  <button class="tab-btn" onclick="showTab('m6',this)">Modul 6 — Investasi</button>
+  <button class="tab-btn" onclick="showTab('m7',this)">Modul 7 — Aset Tetap</button>
+</div>
+
+<!-- ══ MODUL 5 ══ -->
+<div id="m5" class="tab-pane active">
+<div class="notice">📌 Isikan kolom <strong>Indeks</strong> dan <strong>Paraf</strong> sesuai kunci jawaban. Kolom yang sudah diisi tidak dapat diubah setelah pengecekan.</div>
+
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th style="width:38px">No.</th>
+        <th class="left">Prosedur Audit</th>
+        <th style="width:90px" colspan="2">Dikerjakan Oleh</th>
+      </tr>
+      <tr>
+        <th></th><th></th>
+        <th style="width:80px">Indeks</th>
+        <th style="width:65px">Paraf</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="section-row"><td colspan="4">SEWA DIBAYAR DIMUKA</td></tr>
+      <tr><td class="no">1.</td><td>Minta daftar-daftar sewa dibayar dimuka dan cocokkan dengan saldo menurut buku besar.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_1"></td></tr>
+      <tr><td class="no">2.</td><td>Periksa surat kontrak sewa (<em>rent agreement</em>) untuk perjanjian baru, sedangkan untuk perjanjian lama lihat ke kertas kerja tahun sebelumnya.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_2"></td></tr>
+      <tr><td class="no">3.</td><td>Periksa kebenaran perhitungan sewa dibayar dimuka untuk tahun berjalan dengan memperhatikan periode berlakunya masa sewa tersebut (lakukan rekonsiliasi dengan biaya sewa di pos laba rugi).</td><td class="idx-cell"><input class="cell-input" id="p5_s1_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_3"></td></tr>
+      <tr><td class="no">4.</td><td>Periksa bukti pembayaran atas penambahan sewa dibayar dimuka dan pastikan bahwa penambahan tersebut disetujui oleh pejabat yang berwenang.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_4"></td></tr>
+      <tr><td class="no">5.</td><td>Pisahkan antara biaya kontrak jangka pendek dengan jangka panjang.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_5" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_5"></td></tr>
+      <tr><td class="no">6.</td><td>Untuk kontrak sewa jangka panjang lakukan konfirmasi atas jumlah yang masih berlaku.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_6" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_6"></td></tr>
+      <tr><td class="no">7.</td><td>Yakinkan bahwa peraturan perpajakan yang berlaku untuk biaya sewa telah ditaati.</td><td class="idx-cell"><input class="cell-input" id="p5_s1_7" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s1_7"></td></tr>
+      <tr class="section-row"><td colspan="4">ASURANSI DIBAYAR DIMUKA</td></tr>
+      <tr><td class="no">1.</td><td>Minta daftar asuransi yang dibayar dimuka, dan cocokkan dengan saldo buku besar.</td><td class="idx-cell"><input class="cell-input" id="p5_s2_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s2_1"></td></tr>
+      <tr><td class="no">2.</td><td>Periksa polis asuransi dan bukti pembayaran premi asuransi, bila polis tersebut disimpan oleh bank, lakukan konfirmasi kepada bank yang bersangkutan.</td><td class="idx-cell"><input class="cell-input" id="p5_s2_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s2_2"></td></tr>
+      <tr><td class="no">3.</td><td>Periksa kebenaran perhitungan premi asuransi yang dibayar dimuka dan biaya asuransi untuk tahun berjalan dengan memerhatikan periode berlakunya polis asuransi tersebut.</td><td class="idx-cell"><input class="cell-input" id="p5_s2_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s2_3"></td></tr>
+      <tr><td class="no">4.</td><td>Pisahkan antara biaya yang mempunyai masa manfaat jangka pendek dengan yang jangka panjang.</td><td class="idx-cell"><input class="cell-input" id="p5_s2_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s2_4"></td></tr>
+      <tr><td class="no">5.</td><td>Perhatikan kecukupan jumlah asuransi atas segala macam kerugian yang timbul. Hal ini harus dengan dihubungkan dengan pemeriksaan atas persediaan dan aset tetap. Bila pertanggungan asuransi tersebut tidak mencukupi, masukan poin ini sebagai salah satu <em>Management Letter Point</em>.</td><td class="idx-cell"><input class="cell-input" id="p5_s2_5" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s2_5"></td></tr>
+      <tr class="section-row"><td colspan="4">PAJAK DIBAYAR DIMUKA</td></tr>
+      <tr><td class="no">1.</td><td>Minta daftar rincian pajak dibayar dimuka yang meliputi jenis pajak PPh Pasal 22, PPh Pasal 23, dan PPh Pasal 25.</td><td class="idx-cell"><input class="cell-input" id="p5_s3_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s3_1"></td></tr>
+      <tr><td class="no">2.</td><td>Periksa bukti pemotongan dan bukti Surat Setoran Pajak (SSP), serta tanggal penyetoran dan pelaporannya.</td><td class="idx-cell"><input class="cell-input" id="p5_s3_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s3_2"></td></tr>
+      <tr><td class="no">3.</td><td>Cocokkan atas bukti pemotongan dan bukti surat setoran pajak dengan saldo di buku besar serta lakukan <em>vouching</em>.</td><td class="idx-cell"><input class="cell-input" id="p5_s3_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s3_3"></td></tr>
+      <tr><td class="no">4.</td><td>Lakukan rekonsiliasi antara total objek dengan tarif pajaknya.</td><td class="idx-cell"><input class="cell-input" id="p5_s3_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s3_4"></td></tr>
+      <tr class="section-row"><td colspan="4">PAJAK PERTAMBAHAN NILAI (PPN) MASUKAN</td></tr>
+      <tr><td class="no">1.</td><td>Minta daftar Pajak Pertambahan Nilai Masukan yang meliputi informasi tanggal faktur pajak, NPWP, NPKP, DPP, dan besarnya PPN yang dipungut.</td><td class="idx-cell"><input class="cell-input" id="p5_s4_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s4_1"></td></tr>
+      <tr><td class="no">2.</td><td>Yakinkan bahwa semua pajak sesuai pajak masukan telah didukung dengan bukti pajak yang dapat dikreditkan sesuai peraturan perpajakan.</td><td class="idx-cell"><input class="cell-input" id="p5_s4_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s4_2"></td></tr>
+      <tr><td class="no">3.</td><td>Pastikan bahwa pajak masukan tersebut telah dilaporkan/dikreditkan secara teratur dalam SPT Masa, dan dikompensasikan dengan pajak keluaran.</td><td class="idx-cell"><input class="cell-input" id="p5_s4_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s4_3"></td></tr>
+      <tr><td class="no">4.</td><td>Apabila ada perbedaan saldo neto antara buku besar dengan SPT Masa, pelajarilah sebab-sebabnya.</td><td class="idx-cell"><input class="cell-input" id="p5_s4_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s4_4"></td></tr>
+      <tr><td class="no">5.</td><td>Pelajari semua surat koresponden dengan kantor pajak, terutama untuk permohonan restitusi karena kelebihan pembayaran pajak masukan.</td><td class="idx-cell"><input class="cell-input" id="p5_s4_5" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input" id="pf5_s4_5"></td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">–</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Siklus Perolehan dan Pembayaran Beban Dibayar Dimuka</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Beban Dibayar Dimuka [G]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:70px" rowspan="2">WP Ref.</th>
+        <th style="width:130px" rowspan="2">Per Klien<br>31/12/2018</th>
+        <th colspan="2">PARE</th>
+        <th style="width:130px" rowspan="2">Per Audit<br>31/12/2018</th>
+      </tr>
+      <tr><th style="width:120px">Dr</th><th style="width:120px">Cr</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Sewa dibayar dimuka</td>
+        <td class="center"><input class="cell-input" id="g_wp1" oninput="live(this)"></td>
+        <td class="right">50.000.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_dr1" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_cr1" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_aud1" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr>
+        <td>Asuransi dibayar dimuka</td>
+        <td class="center"><input class="cell-input" id="g_wp2" oninput="live(this)"></td>
+        <td class="right">30.000.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_dr2" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_cr2" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_aud2" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr>
+        <td>Pajak dibayar dimuka</td>
+        <td class="center"><input class="cell-input" id="g_wp3" oninput="live(this)"></td>
+        <td class="right">–</td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_dr3" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_cr3" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_aud3" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr style="background:#f0f0f0">
+        <td colspan="2" style="text-align:right;padding-right:12px;font-weight:700">Total</td>
+        <td class="right" style="font-weight:700">80.000.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_totdr" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_totcr" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g_totaud" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px" colspan="6">^ ^ ^ ^</td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">G</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Beban Dibayar Dimuka</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Asuransi Dibayar Dimuka [G1]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left">Aset yang Diasuransikan</th>
+        <th style="width:140px">Nilai Polis</th>
+        <th style="width:130px">Premi yang Dibayar</th>
+        <th style="width:120px">Periode</th>
+        <th style="width:90px">Nomor Polis</th>
+        <th style="width:120px">Beban Asuransi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Bangunan</td><td class="right">2.000.000.000</td><td class="right">15.000.000</td><td class="center">1/4/17–31/3/18</td><td class="center">3575</td><td class="num-cell"><input class="cell-input right-align" id="g1_r1" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Perabot dan peralatan kantor</td><td class="right">200.000.000</td><td class="right">1.200.000</td><td class="center">1/4/17–31/3/18</td><td class="center">3576</td><td class="num-cell"><input class="cell-input right-align" id="g1_r2" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Kendaraan bermotor</td><td class="right">1.000.000.000</td><td class="right">3.000.000</td><td class="center">1/6/17–31/5/18</td><td class="center">3764</td><td class="num-cell"><input class="cell-input right-align" id="g1_r3" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Persediaan</td><td class="right">2.000.000.000</td><td class="right">10.800.000</td><td class="center">1/7/17–30/6/18</td><td class="center">3876</td><td class="num-cell"><input class="cell-input right-align" id="g1_r4" oninput="live(this)" placeholder="0"></td></tr>
+      <tr style="background:#f0f0f0">
+        <td colspan="2" style="font-weight:700"></td>
+        <td class="right" style="font-weight:700">30.000.000</td>
+        <td></td><td></td>
+        <td class="num-cell"><input class="cell-input right-align" id="g1_tot" oninput="live(this)" placeholder="0"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">G1</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Asuransi Dibayar Dimuka</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul PPh 25 Dibayar Dimuka [G2]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" style="width:100px">Bulan</th>
+        <th colspan="2">Setor</th>
+        <th>Total Rp</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th style="width:160px">Tanggal</th>
+        <th style="width:160px">Rp</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="g2body">
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">G2</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">PPh 25 Dibayar Dimuka</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-check" id="btn_check_m5" onclick="checkMod('m5')">✔ Cek Jawaban Modul 5</button>
+  <button class="btn btn-reset" onclick="resetMod('m5')">↺ Reset Modul 5</button>
+  <button class="btn btn-pdf" onclick="savePDF('m5')">⬇ Simpan PDF Modul 5</button>
+</div>
+<div class="result-card" id="res_m5">
+  <div class="stamp-overlay" id="stamp_m5"></div>
+  <div class="result-title" id="res_m5_title"></div>
+  <div class="result-detail" id="res_m5_detail"></div>
+</div>
+</div><!-- /m5 -->
+
+<!-- ══ MODUL 6 ══ -->
+<div id="m6" class="tab-pane">
+<div class="notice">📌 Isikan kolom <strong>Indeks</strong> dan kolom nilai sesuai hasil analisis. Jawaban dikunci setelah pengecekan.</div>
+
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th style="width:38px">No.</th>
+        <th class="left">Prosedur Audit</th>
+        <th colspan="2">Dikerjakan Oleh</th>
+      </tr>
+      <tr><th></th><th></th><th style="width:80px">Indeks</th><th style="width:65px">Paraf</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="no">1.</td><td>Siapkan skedul utama dari investasi.</td><td class="idx-cell"><input class="cell-input" id="p6_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">2.</td><td>Lakukan konfirmasi atas investasi yang dipegang oleh pihak lain, apabila digunakan sebagai jaminan oleh pihak bank atau dikuasai oleh pihak broker/pialang.</td><td class="idx-cell"><input class="cell-input" id="p6_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">3.</td><td>Minta catatan kurs harga pasar (<em>market price</em>) pada tanggal neraca untuk saham dan bandingkan dengan <em>at cost</em>.</td><td class="idx-cell"><input class="cell-input" id="p6_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">4.</td><td>Periksa transaksi mutasi penambahan dan pengurangan dengan melihat bukti pembelian dan penjualan, apakah telah mendapat persetujuan dari pejabat yang berwenang.</td><td class="idx-cell"><input class="cell-input" id="p6_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">5.</td><td>Lakukan verifikasi atas dividen tunai/saham.</td><td class="idx-cell"><input class="cell-input" id="p6_5" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">6.</td><td>Lakukan pengecekan pencatatan investasi apakah sesuai dengan ketentuan standar akuntansi yang berlaku umum.</td><td class="idx-cell"><input class="cell-input" id="p6_6" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">7.</td><td>Minta bukti fotokopi akta notaris atas investasi pada perusahaan asosiasi atau anak perusahaan.</td><td class="idx-cell"><input class="cell-input" id="p6_7" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">8.</td><td>Lakukan verifikasi harga perolehan dari investasi pada perusahaan asosiasi atau anak perusahaan (perhatikan persentase kepemilikannya) dengan mencocokkan komposisi penyetoran modal pada akta notaris tersebut.</td><td class="idx-cell"><input class="cell-input" id="p6_8" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">9.</td><td>Lakukan audit terhadap perusahaan asosiasi/anak perusahaan yang dilakukan investasi atau minta laporan keuangan yang telah diaudit oleh akuntan lain untuk keperluan penyusunan laporan keuangan konsolidasi.</td><td class="idx-cell"><input class="cell-input" id="p6_9" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">10.</td><td>Yakinkan bahwa peraturan perpajakan yang berlaku telah ditaati.</td><td class="idx-cell"><input class="cell-input" id="p6_10" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">–</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Siklus Perolehan dan Pembayaran Investasi</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Investasi [H]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:70px" rowspan="2">WP Ref.</th>
+        <th style="width:130px" rowspan="2">Per Klien<br>31/12/2018</th>
+        <th colspan="2">PARE</th>
+        <th style="width:130px" rowspan="2">Per Audit<br>31/12/2018</th>
+      </tr>
+      <tr><th style="width:120px">Dr</th><th style="width:120px">Cr</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Investasi di PT Pooh</td>
+        <td class="center"><input class="cell-input" id="h_wp1" oninput="live(this)"></td>
+        <td class="right">100.000.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_dr1" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_cr1" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_aud1" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr>
+        <td>Investasi di PT Piglet</td>
+        <td class="center"><input class="cell-input" id="h_wp2" oninput="live(this)"></td>
+        <td class="right">300.000.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_dr2" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_cr2" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_aud2" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr>
+        <td>Pembayaran dimuka</td>
+        <td class="center"><input class="cell-input" id="h_wp3" oninput="live(this)"></td>
+        <td class="right">22.500.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_dr3" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_cr3" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_aud3" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr style="background:#f0f0f0">
+        <td colspan="2" style="text-align:right;font-weight:700;padding-right:12px">Total</td>
+        <td class="right" style="font-weight:700">422.500.000</td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_totdr" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_totcr" oninput="live(this)" placeholder="0"></td>
+        <td class="num-cell"><input class="cell-input right-align" id="h_totaud" oninput="live(this)" placeholder="0"></td>
+      </tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px" colspan="6">^ ^ ^ ^</td></tr>
+    </tbody>
+  </table>
+  <div style="padding:8px 12px; border-top:1px solid #ddd;">
+    <div style="font-size:11px;font-weight:700;margin-bottom:4px">Catatan pemeriksaan:</div>
+    <div class="catatan-lines" id="cat_h"></div>
+  </div>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">H</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Investasi</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-check" id="btn_check_m6" onclick="checkMod('m6')">✔ Cek Jawaban Modul 6</button>
+  <button class="btn btn-reset" onclick="resetMod('m6')">↺ Reset Modul 6</button>
+  <button class="btn btn-pdf" onclick="savePDF('m6')">⬇ Simpan PDF Modul 6</button>
+</div>
+<div class="result-card" id="res_m6">
+  <div class="stamp-overlay" id="stamp_m6"></div>
+  <div class="result-title" id="res_m6_title"></div>
+  <div class="result-detail" id="res_m6_detail"></div>
+</div>
+</div><!-- /m6 -->
+
+<!-- ══ MODUL 7 ══ -->
+<div id="m7" class="tab-pane">
+<div class="notice">📌 Isikan kolom <strong>Indeks</strong>, kolom PARE dan Per Audit sesuai hasil pemeriksaan.</div>
+
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th style="width:38px">No.</th>
+        <th class="left">Prosedur Audit</th>
+        <th colspan="2">Dikerjakan Oleh</th>
+      </tr>
+      <tr><th></th><th></th><th style="width:80px">Indeks</th><th style="width:65px">Paraf</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="no">1.</td><td>Siapkan skedul utama sehubungan dengan audit aset tetap.</td><td class="idx-cell"><input class="cell-input" id="p7_1" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">2.</td><td>Minta "daftar aset tetap" (<em>list of fixed assets</em>) yang mencakup tanggal perolehan, nilai perolehan, unit, akumulasi penyusutan beserta nilai bukunya. Cocokkan dengan saldo akun kontrolnya.</td><td class="idx-cell"><input class="cell-input" id="p7_2" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">3.</td><td>Pelajari kebijakan akuntansi mengenai kapitalisasi nilai perolehan aset tetap dan perhitungan penyusutan, apakah diterapkan secara konsisten dengan periode sebelumnya.</td><td class="idx-cell"><input class="cell-input" id="p7_3" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">4.</td><td>Periksa transaksi mutasi penambahan dan pengurangan, apakah telah mendapatkan persetujuan dari pejabat yang berwenang.</td><td class="idx-cell"><input class="cell-input" id="p7_4" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">5.</td><td>Apabila ada "construction in progress", telaah biaya yang dibebankan. Apabila pembangunan aset ini disubkontrakkan ke pihak lain, perhatikan apakah pencatatannya sudah sesuai dengan persentasi penyelesaiannya.</td><td class="idx-cell"><input class="cell-input" id="p7_5" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">6.</td><td>Apabila ada aset tetap yang diperoleh melalui sewa guna usaha (<em>leasing</em>), bandingkan daftar aset dengan perjanjian sewa guna usaha tersebut, telaah apakah pencatatan sudah sesuai dengan PSAK Nomor 30.</td><td class="idx-cell"><input class="cell-input" id="p7_6" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">7.</td><td>Apabila ada aset tetap yang diperoleh dari penukaran dengan modal saham perusahaan, teliti kewajaran nilai tukarnya dengan membandingkan dengan harga pasar.</td><td class="idx-cell"><input class="cell-input" id="p7_7" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">8.</td><td>Bila perusahaan melakukan revaluasi terhadap nilai aset tetap: minta daftar penilaiannya, teliti dasar penilaiannya sesuai PSAK Nomor 16, dan cek jurnal penyesuaian terkait.</td><td class="idx-cell"><input class="cell-input" id="p7_8" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">9.</td><td>Lakukan "reasonableness test" atas perhitungan penyusutan yang telah dilakukan perusahaan, dengan melakukan secara per golongan daripada aset tetap tersebut.</td><td class="idx-cell"><input class="cell-input" id="p7_9" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">10.</td><td>Apabila beban penyusutan aset tetap yang dibebankan pada beban produksi di bawah kapasitas normal perusahaan, beban tersebut tidak boleh dibebankan sepenuhnya ke dalam beban produksi.</td><td class="idx-cell"><input class="cell-input" id="p7_10" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">11.</td><td>Lakukan inventarisasi aset tetap, terutama untuk penambahan selama tahun berjalan.</td><td class="idx-cell"><input class="cell-input" id="p7_11" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">12.</td><td>Pertimbangkan apakah pengungkapan diperlukan untuk: aset tetap yang direvaluasi, dijadikan jaminan, bunga yang dikapitalisasi, aset tetap dalam sewa, aset tetap dalam tahap penyelesaian, dan aset yang tidak digunakan lagi.</td><td class="idx-cell"><input class="cell-input" id="p7_12" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">13.</td><td>Tujuan perpajakan: minta daftar perhitungan penyusutan fiskal untuk tahun yang bersangkutan. Cocokkan saldo-saldo awal untuk setiap golongan fiskal dengan SPT tahun lalu.</td><td class="idx-cell"><input class="cell-input" id="p7_13" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+      <tr><td class="no">14.</td><td>Catat hal-hal yang perlu diungkapkan dalam Surat Pernyataan Klien (<em>Client Representation Letter</em>), Surat Manajemen (<em>Management Letter</em>), serta hal-hal yang perlu perhatian para partner.</td><td class="idx-cell"><input class="cell-input" id="p7_14" oninput="live(this)"></td><td class="paraf-cell"><input class="cell-input"></td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">–</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Siklus Perolehan dan Pembayaran Aset Tetap</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Aset Tetap [J] — Harga Perolehan, Akumulasi Penyusutan, Nilai Buku</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:60px" rowspan="2">WP Ref.</th>
+        <th style="width:130px" rowspan="2">Per Klien<br>31/12/2018</th>
+        <th colspan="2">PARE</th>
+        <th style="width:130px" rowspan="2">Per Audit<br>31/12/2018</th>
+      </tr>
+      <tr><th style="width:120px">Dr</th><th style="width:120px">Cr</th></tr>
+    </thead>
+    <tbody>
+      <tr class="section-row"><td colspan="6">Harga perolehan</td></tr>
+      <tr><td>Tanah</td><td class="center"></td><td class="right">2.000.000.000</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_tanah" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Bangunan dan prasarana</td><td class="center"></td><td class="right">2.950.000.000</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_bang" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_bang" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_bang" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Mesin dan peralatan</td><td class="center"></td><td class="right">820.000.000</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_mes" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Kendaraan bermotor</td><td class="center"></td><td class="right">950.908.000</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_kend" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_kend" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_kend" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Peralatan kantor</td><td class="center"></td><td class="right">188.881.000</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_per" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_per" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_per" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Aset tetap sewa pembiayaan</td><td class="center"></td><td class="right">–</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_sewa" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_sewa" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_hp_sewa" oninput="live(this)" placeholder="0"></td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right" style="font-weight:700">6.909.789.000</td><td class="num-cell"><input class="cell-input right-align" id="j_totdr_hp" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totcr_hp" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totaud_hp" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="6">^</td></tr>
+
+      <tr class="section-row"><td colspan="6">Akumulasi penyusutan</td></tr>
+      <tr><td>Bangunan dan prasarana</td><td class="center"></td><td class="right">282.500.000</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_ak_bang" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_ak_bang" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_ak_bang" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Mesin dan peralatan</td><td class="center"></td><td class="right">146.000.000</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_ak_mes" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Kendaraan bermotor</td><td class="center"></td><td class="right">520.349.000</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_ak_kend" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_ak_kend" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_ak_kend" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Peralatan kantor</td><td class="center"></td><td class="right">87.810.800</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_ak_per" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_ak_per" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_ak_per" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Aset tetap sewa pembiayaan</td><td class="center"></td><td class="right">–</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell">–</td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right" style="font-weight:700">1.036.659.800</td><td class="num-cell"><input class="cell-input right-align" id="j_totdr_ak" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totcr_ak" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totaud_ak" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="6">^</td></tr>
+
+      <tr class="section-row"><td colspan="6">Nilai buku</td></tr>
+      <tr><td>Tanah</td><td class="center"></td><td class="right">2.000.000.000</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_tanah" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Bangunan dan prasarana</td><td class="center"></td><td class="right">2.667.500.000</td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_nb_bang" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_bang" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Mesin dan peralatan</td><td class="center"></td><td class="right">674.000.000</td><td class="num-cell"></td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_mes" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Kendaraan bermotor</td><td class="center"></td><td class="right">430.559.000</td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_nb_kend" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_kend" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Peralatan kantor</td><td class="center"></td><td class="right">101.070.200</td><td class="num-cell"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_nb_per" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_per" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>Aset tetap sewa pembiayaan</td><td class="center"></td><td class="right">–</td><td class="num-cell"><input class="cell-input right-align" id="j_dr_nb_sewa" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_cr_nb_sewa" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_nb_sewa" oninput="live(this)" placeholder="0"></td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right" style="font-weight:700">5.873.129.200</td><td class="num-cell"><input class="cell-input right-align" id="j_totdr_nb" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totcr_nb" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="j_totaud_nb" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="6">^</td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div><div class="wp-f-value"><input class="cell-input" placeholder="…" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">J</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Aset Tetap</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div><div class="wp-f-value"><input class="cell-input" type="date" style="text-align:left"></div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Aset Tetap [JJ] — Perbandingan Nilai Buku 2017 vs 2018</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:60px" rowspan="2">WP Ref.</th>
+        <th style="width:140px" rowspan="2">Harga Perolehan<br>2017</th>
+        <th colspan="2">Nilai Buku (Rp)</th>
+      </tr>
+      <tr><th style="width:140px">2018</th><th style="width:140px">2017</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tanah</td><td class="center"></td><td class="right">2.000.000.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_nb18_tanah" oninput="live(this)" placeholder="0"></td><td class="right">2.000.000.000</td></tr>
+      <tr><td>Bangunan &amp; prasarana</td><td class="center"></td><td class="right">1.350.000.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_nb18_bang" oninput="live(this)" placeholder="0"></td><td class="right">1.215.000.000</td></tr>
+      <tr><td>Mesin dan peralatan</td><td class="center"></td><td class="right">420.000.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_nb18_mes" oninput="live(this)" placeholder="0"></td><td class="right">336.000.000</td></tr>
+      <tr><td>Kendaraan bermotor</td><td class="center"></td><td class="right">550.279.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_nb18_kend" oninput="live(this)" placeholder="0"></td><td class="right">330.167.400</td></tr>
+      <tr><td>Peralatan kantor</td><td class="center"></td><td class="right">83.391.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_nb18_per" oninput="live(this)" placeholder="0"></td><td class="right">50.034.600</td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right" style="font-weight:700">4.403.670.000</td><td class="num-cell"><input class="cell-input right-align" id="jj_tot18" oninput="live(this)" placeholder="0"></td><td class="right" style="font-weight:700">3.931.202.000</td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="5">^ ^</td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"></div><div class="wp-f-cell"></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">JJ</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Aset Tetap</div></div>
+      <div class="wp-f-cell"></div><div class="wp-f-cell"></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Utang Sewa Jangka Pendek [M3]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:60px" rowspan="2">WP Ref.</th>
+        <th style="width:130px" rowspan="2">Per Klien<br>31/12/2018</th>
+        <th colspan="2">PARE</th>
+        <th style="width:130px" rowspan="2">Per Audit<br>31/12/2018</th>
+      </tr>
+      <tr><th style="width:120px">Dr</th><th style="width:120px">Cr</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PT Ciptaning</td><td class="center"></td><td class="right">–</td><td class="num-cell"><input class="cell-input right-align" id="m3_dr_cipt" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_cr_cipt" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_aud_cipt" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>PT Maju</td><td class="center"></td><td class="right">–</td><td class="num-cell"><input class="cell-input right-align" id="m3_dr_maju" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_cr_maju" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_aud_maju" oninput="live(this)" placeholder="0"></td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right">–</td><td class="num-cell"><input class="cell-input right-align" id="m3_totdr" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_totcr" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="m3_totaud" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="6">^</td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">M3</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Utang sewa jangka pendek</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Tanggal:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="sect-label">Skedul Utang Sewa Jangka Panjang [N1]</div>
+<div class="wp-card">
+  <div class="kap-bar"><span class="kap-logo-sm">K&R</span><span class="kap-name-sm">Krisanti &amp; Rekan — Kantor Akuntan Publik</span></div>
+  <table class="book-table">
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Keterangan</th>
+        <th style="width:60px" rowspan="2">WP Ref.</th>
+        <th style="width:130px" rowspan="2">Per Klien<br>31/12/2018</th>
+        <th colspan="2">PARE</th>
+        <th style="width:130px" rowspan="2">Per Audit<br>31/12/2018</th>
+      </tr>
+      <tr><th style="width:120px">Dr</th><th style="width:120px">Cr</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PT Ciptaning</td><td class="center"></td><td class="right">20.480.000</td><td class="num-cell"><input class="cell-input right-align" id="n1_dr_cipt" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_cr_cipt" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_aud_cipt" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td>PT Maju</td><td class="center"></td><td class="right">82.654.000</td><td class="num-cell"><input class="cell-input right-align" id="n1_dr_maju" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_cr_maju" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_aud_maju" oninput="live(this)" placeholder="0"></td></tr>
+      <tr style="background:#f0f0f0"><td colspan="2" style="text-align:right;font-weight:700;padding-right:8px">Total</td><td class="right" style="font-weight:700">103.134.000</td><td class="num-cell"><input class="cell-input right-align" id="n1_totdr" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_totcr" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="n1_totaud" oninput="live(this)" placeholder="0"></td></tr>
+      <tr><td style="text-align:center;color:#999;font-size:11px;border:none" colspan="6">^</td></tr>
+    </tbody>
+  </table>
+  <div class="wp-footer">
+    <div class="wp-footer-row1">
+      <div class="wp-f-cell"><div class="wp-f-label">Klien</div><div class="wp-f-value large">PT SUGUS</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Dibuat oleh:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Diperiksa oleh:</div></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Indeks</div><div class="wp-f-index">N1</div></div>
+    </div>
+    <div class="wp-footer-row2">
+      <div class="wp-f-cell"><div class="wp-f-label">Skedul:</div><div class="wp-f-value" style="font-style:italic">Utang sewa jangka panjang</div></div>
+      <div class="wp-f-cell"></div><div class="wp-f-cell"></div>
+      <div class="wp-f-cell"><div class="wp-f-label">Periode:</div><div class="wp-f-value">31/12/2018</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="btn-row">
+  <button class="btn btn-check" id="btn_check_m7" onclick="checkMod('m7')">✔ Cek Jawaban Modul 7</button>
+  <button class="btn btn-reset" onclick="resetMod('m7')">↺ Reset Modul 7</button>
+  <button class="btn btn-pdf" onclick="savePDF('m7')">⬇ Simpan PDF Modul 7</button>
+</div>
+<div class="result-card" id="res_m7">
+  <div class="stamp-overlay" id="stamp_m7"></div>
+  <div class="result-title" id="res_m7_title"></div>
+  <div class="result-detail" id="res_m7_detail"></div>
+</div>
+</div><!-- /m7 -->
+
+<script>
+const AK = {
+  p5_s1_1:'G', p5_s1_2:'ü', p5_s1_3:'G', p5_s1_4:'ü',
+  p5_s1_5:'-', p5_s1_6:'-', p5_s1_7:'ü',
+  p5_s2_1:'G1', p5_s2_2:'ü', p5_s2_3:'G1', p5_s2_4:'-', p5_s2_5:'ü',
+  p5_s3_1:'ü', p5_s3_2:'ü', p5_s3_3:'ü', p5_s3_4:'-',
+  p5_s4_1:'G', p5_s4_2:'G', p5_s4_3:'-', p5_s4_4:'-', p5_s4_5:'-',
+
+  g_wp1:'G1', g_dr1:'0', g_cr1:'6250000', g_aud1:'43750000',
+  g_wp2:'G1', g_dr2:'0', g_cr2:'19300000', g_aud2:'10700000',
+  g_wp3:'G2', g_dr3:'0', g_cr3:'0', g_aud3:'0',
+  g_totdr:'0', g_totcr:'25550000', g_totaud:'54450000',
+
+  g1_r1:'11250000', g1_r2:'900000', g1_r3:'1750000', g1_r4:'5400000',
+  g1_tot:'19300000',
+
+  g2_tgl_jan:'2/6/2018', g2_rp_jan:'54250000', g2_tot_jan:'54250000',
+  g2_tgl_feb:'3/6/2018', g2_rp_feb:'44000000', g2_tot_feb:'98250000',
+  g2_tgl_mar:'4/6/2018', g2_rp_mar:'44000000', g2_tot_mar:'142250000',
+  g2_tgl_apr:'5/7/2018', g2_rp_apr:'44000000', g2_tot_apr:'186250000',
+  g2_tgl_mei:'6/8/2018', g2_rp_mei:'44000000', g2_tot_mei:'230250000',
+  g2_tgl_jun:'7/6/2018', g2_rp_jun:'44000000', g2_tot_jun:'274250000',
+  g2_tgl_jul:'8/6/2018', g2_rp_jul:'44000000', g2_tot_jul:'318250000',
+  g2_tgl_agu:'9/6/2018', g2_rp_agu:'44000000', g2_tot_agu:'362250000',
+  g2_tgl_sep:'10/8/2018', g2_rp_sep:'44000000', g2_tot_sep:'406250000',
+  g2_tgl_okt:'11/6/2018', g2_rp_okt:'44000000', g2_tot_okt:'450250000',
+  g2_tgl_nov:'12/6/2018', g2_rp_nov:'44000000', g2_tot_nov:'494250000',
+
+  p6_1:'H', p6_2:'-', p6_3:'-', p6_4:'H', p6_5:'ü',
+  p6_6:'H', p6_7:'ü', p6_8:'ü', p6_9:'ü', p6_10:'-',
+
+  h_wp1:'HH1', h_dr1:'0', h_cr1:'0', h_aud1:'100000000',
+  h_wp2:'HH2', h_dr2:'12500000', h_cr2:'0', h_aud2:'312500000',
+  h_wp3:'JRE001', h_dr3:'0', h_cr3:'22500000', h_aud3:'0',
+  h_totdr:'12500000', h_totcr:'22500000', h_totaud:'412500000',
+
+  p7_1:'J', p7_2:'ü', p7_3:'J', p7_4:'JJ', p7_5:'-',
+  p7_6:'J', p7_7:'-', p7_8:'-', p7_9:'J', p7_10:'J',
+  p7_11:'J', p7_12:'J', p7_13:'ü', p7_14:'J',
+
+  j_hp_tanah:'2000000000',
+  j_dr_bang:'0', j_cr_bang:'100000000', j_hp_bang:'2850000000',
+  j_hp_mes:'820000000',
+  j_dr_kend:'59371000', j_cr_kend:'107981000', j_hp_kend:'902298000',
+  j_dr_per:'0', j_cr_per:'71316000', j_hp_per:'117565000',
+  j_dr_sewa:'160000000', j_cr_sewa:'27981000', j_hp_sewa:'132019000',
+  j_totdr_hp:'219371000', j_totcr_hp:'307278000', j_totaud_hp:'6821882000',
+
+  j_dr_ak_bang:'0', j_cr_ak_bang:'67500000', j_ak_bang:'215000000',
+  j_ak_mes:'146000000',
+  j_dr_ak_kend:'16000000', j_cr_ak_kend:'0', j_ak_kend:'536349000',
+  j_dr_ak_per:'17667200', j_cr_ak_per:'1978000', j_ak_per:'103500000',
+  j_totdr_ak:'101167200', j_totcr_ak:'1978000', j_totaud_ak:'937470600',
+
+  j_nb_tanah:'2000000000',
+  j_cr_nb_bang:'32500000', j_nb_bang:'2635000000',
+  j_nb_mes:'674000000',
+  j_cr_nb_kend:'32610000', j_nb_kend:'397949000',
+  j_cr_nb_per:'55626800', j_nb_per:'45443400',
+  j_dr_nb_sewa:'160000000', j_cr_nb_sewa:'27981000', j_nb_sewa:'132019000',
+  j_totdr_nb:'160000000', j_totcr_nb:'65110000', j_totaud_nb:'5968019200',
+
+  jj_nb18_tanah:'2000000000', jj_nb18_bang:'2635000000',
+  jj_nb18_mes:'674000000', jj_nb18_kend:'397949000', jj_nb18_per:'45443400',
+  jj_tot18:'5751392400',
+
+  m3_dr_cipt:'0', m3_cr_cipt:'20480000', m3_aud_cipt:'20480000',
+  m3_dr_maju:'48000000', m3_cr_maju:'0', m3_aud_maju:'34654000',
+  m3_totdr:'48000000', m3_totcr:'20480000', m3_totaud:'55134000',
+
+  n1_dr_cipt:'20480000', n1_cr_cipt:'0', n1_aud_cipt:'0',
+  n1_dr_maju:'48000000', n1_cr_maju:'0', n1_aud_maju:'34654000',
+  n1_totdr:'68480000', n1_totcr:'0', n1_totaud:'34654000',
+};
+
+const MODS = {
+  m5: ['p5_s1_1','p5_s1_2','p5_s1_3','p5_s1_4','p5_s1_5','p5_s1_6','p5_s1_7',
+       'p5_s2_1','p5_s2_2','p5_s2_3','p5_s2_4','p5_s2_5',
+       'p5_s3_1','p5_s3_2','p5_s3_3','p5_s3_4',
+       'p5_s4_1','p5_s4_2','p5_s4_3','p5_s4_4','p5_s4_5',
+       'g_wp1','g_dr1','g_cr1','g_aud1','g_wp2','g_dr2','g_cr2','g_aud2',
+       'g_wp3','g_dr3','g_cr3','g_aud3','g_totdr','g_totcr','g_totaud',
+       'g1_r1','g1_r2','g1_r3','g1_r4','g1_tot',
+       'g2_tgl_jan','g2_rp_jan','g2_tot_jan',
+       'g2_tgl_feb','g2_rp_feb','g2_tot_feb',
+       'g2_tgl_mar','g2_rp_mar','g2_tot_mar',
+       'g2_tgl_apr','g2_rp_apr','g2_tot_apr',
+       'g2_tgl_mei','g2_rp_mei','g2_tot_mei',
+       'g2_tgl_jun','g2_rp_jun','g2_tot_jun',
+       'g2_tgl_jul','g2_rp_jul','g2_tot_jul',
+       'g2_tgl_agu','g2_rp_agu','g2_tot_agu',
+       'g2_tgl_sep','g2_rp_sep','g2_tot_sep',
+       'g2_tgl_okt','g2_rp_okt','g2_tot_okt',
+       'g2_tgl_nov','g2_rp_nov','g2_tot_nov'],
+  m6: ['p6_1','p6_2','p6_3','p6_4','p6_5','p6_6','p6_7','p6_8','p6_9','p6_10',
+       'h_wp1','h_dr1','h_cr1','h_aud1','h_wp2','h_dr2','h_cr2','h_aud2',
+       'h_wp3','h_dr3','h_cr3','h_aud3','h_totdr','h_totcr','h_totaud'],
+  m7: ['p7_1','p7_2','p7_3','p7_4','p7_5','p7_6','p7_7','p7_8','p7_9','p7_10',
+       'p7_11','p7_12','p7_13','p7_14',
+       'j_hp_tanah','j_dr_bang','j_cr_bang','j_hp_bang','j_hp_mes',
+       'j_dr_kend','j_cr_kend','j_hp_kend','j_dr_per','j_cr_per','j_hp_per',
+       'j_dr_sewa','j_cr_sewa','j_hp_sewa','j_totdr_hp','j_totcr_hp','j_totaud_hp',
+       'j_dr_ak_bang','j_cr_ak_bang','j_ak_bang','j_ak_mes',
+       'j_dr_ak_kend','j_cr_ak_kend','j_ak_kend',
+       'j_dr_ak_per','j_cr_ak_per','j_ak_per',
+       'j_totdr_ak','j_totcr_ak','j_totaud_ak',
+       'j_nb_tanah','j_cr_nb_bang','j_nb_bang','j_nb_mes',
+       'j_cr_nb_kend','j_nb_kend','j_cr_nb_per','j_nb_per',
+       'j_dr_nb_sewa','j_cr_nb_sewa','j_nb_sewa',
+       'j_totdr_nb','j_totcr_nb','j_totaud_nb',
+       'jj_nb18_tanah','jj_nb18_bang','jj_nb18_mes','jj_nb18_kend','jj_nb18_per','jj_tot18',
+       'm3_dr_cipt','m3_cr_cipt','m3_aud_cipt','m3_dr_maju','m3_cr_maju','m3_aud_maju',
+       'm3_totdr','m3_totcr','m3_totaud',
+       'n1_dr_cipt','n1_cr_cipt','n1_aud_cipt','n1_dr_maju','n1_cr_maju','n1_aud_maju',
+       'n1_totdr','n1_totcr','n1_totaud'],
+};
+
+const lockedMods = { m5: false, m6: false, m7: false };
+
+function norm(v) { return String(v||'').trim().toLowerCase().replace(/[.\s,]/g,''); }
+function numNorm(v) { return parseFloat(String(v||'0').replace(/[.,\s]/g,'')) || 0; }
+
+function isCorrect(id) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  const ans = AK[id];
+  if (ans === undefined) return true;
+  const val = el.value || '';
+  const ansNum = parseFloat(ans);
+  if (!isNaN(ansNum)) return Math.abs(numNorm(val) - ansNum) < 2;
+  return norm(val) === norm(ans);
+}
+
+function live(el) {
+  if (el.classList.contains('locked')) return;
+  const ans = AK[el.id];
+  if (!ans) return;
+  const v = el.value.trim();
+  if (!v) { el.classList.remove('correct','wrong'); return; }
+  el.classList.remove('correct','wrong');
+  el.classList.add(isCorrect(el.id) ? 'correct' : 'wrong');
+  updateScores();
+}
+
+function formatAns(ans) {
+  const n = parseFloat(ans);
+  if (!isNaN(n)) return n.toLocaleString('id-ID');
+  return ans;
+}
+
+function wrapWithHint(el) {
+  if (el.parentElement.classList.contains('ans-wrap')) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'ans-wrap';
+  el.parentNode.insertBefore(wrap, el);
+  wrap.appendChild(el);
+  const hint = document.createElement('div');
+  hint.className = 'ans-hint';
+  hint.id = 'hint_' + el.id;
+  wrap.appendChild(hint);
+}
+
+// ── COMPLETENESS CHECK ──
+function checkCompleteness(mod) {
+  const empty = [];
+  MODS[mod].forEach(id => {
+    if (!AK[id]) return; // no answer key = not required
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!el.value.trim()) empty.push(id);
+  });
+  return empty;
+}
+
+// ── LOCK ALL FIELDS (permanent) ──
+function lockAll(mod) {
+  MODS[mod].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      wrapWithHint(el);
+      el.classList.add('locked');
+      el.setAttribute('readonly','true');
+      el.style.pointerEvents='none';
+    }
+  });
+  // Also lock identity fields permanently
+  ['mhs_nama','mhs_nim','mhs_kelas','mhs_tgl'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('locked'); el.style.pointerEvents='none'; }
+  });
+  // Hide check & reset buttons — replaced by permanent notice
+  const btnCheck = document.getElementById('btn_check_'+mod);
+  if (btnCheck) btnCheck.classList.add('locked');
+  lockedMods[mod] = true;
+}
+
+// ── HIGHLIGHT EMPTY FIELDS ──
+function highlightEmpty(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.borderColor = '#e74c3c';
+    el.style.background = '#fff0f0';
+    el.placeholder = '← wajib diisi';
+    // Remove highlight after user starts typing
+    el.addEventListener('input', function clearHighlight() {
+      el.style.borderColor = '';
+      el.style.background = '';
+      el.placeholder = '0';
+      el.removeEventListener('input', clearHighlight);
+    });
+  });
+  // Scroll to first empty
+  const first = document.getElementById(ids[0]);
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ── SAVE STATE TO LOCALSTORAGE ──
+function saveState(mod) {
+  const state = {};
+  MODS[mod].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) state[id] = el.value;
+  });
+  state['__checked__'] = true;
+  state['__nama__'] = document.getElementById('mhs_nama').value;
+  state['__nim__']  = document.getElementById('mhs_nim').value;
+  state['__kelas__']= document.getElementById('mhs_kelas').value;
+  state['__tgl__']  = document.getElementById('mhs_tgl').value;
+  try { localStorage.setItem('kka_ptsugus_' + mod, JSON.stringify(state)); } catch(e) {}
+}
+
+// ── RESTORE STATE FROM LOCALSTORAGE ──
+function restoreState(mod) {
+  let raw;
+  try { raw = localStorage.getItem('kka_ptsugus_' + mod); } catch(e) { return false; }
+  if (!raw) return false;
+  const state = JSON.parse(raw);
+  if (!state.__checked__) return false;
+
+  // Restore identity fields
+  if (state.__nama__) document.getElementById('mhs_nama').value = state.__nama__;
+  if (state.__nim__)  document.getElementById('mhs_nim').value  = state.__nim__;
+  if (state.__kelas__)document.getElementById('mhs_kelas').value= state.__kelas__;
+  if (state.__tgl__)  document.getElementById('mhs_tgl').value  = state.__tgl__;
+
+  // Restore answers
+  MODS[mod].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && state[id] !== undefined) el.value = state[id];
+  });
+  return true;
+}
+
+// ── SHOW PERMANENT LOCKED BANNER ──
+function showLockedBanner(mod) {
+  const resCard = document.getElementById('res_'+mod);
+  if (!resCard) return;
+  // Also hide reset button permanently
+  const btns = resCard.closest('.tab-pane') || document.getElementById(mod);
+  btns.querySelectorAll('.btn-reset').forEach(b => {
+    b.disabled = true;
+    b.style.opacity = '0.3';
+    b.style.cursor = 'not-allowed';
+    b.title = 'Tidak dapat direset — jawaban sudah dikunci permanen di perangkat ini.';
+    b.onclick = function(e) {
+      e.preventDefault();
+      alert('⛔ Jawaban sudah dikunci permanen di perangkat ini dan tidak dapat diulang.');
+    };
+  });
+}
+
+// ── MAIN CHECK ──
+function checkMod(mod) {
+  if (lockedMods[mod]) return;
+
+  // 1. Validate identity
+  const nama = document.getElementById('mhs_nama').value.trim();
+  const nim  = document.getElementById('mhs_nim').value.trim();
+  if (!nama || !nim) {
+    alert('⚠ Harap isi Nama Mahasiswa dan NIM terlebih dahulu sebelum mengecek jawaban.');
+    document.getElementById('mhs_nama').focus();
+    return;
+  }
+
+  // 2. Validate completeness
+  const empty = checkCompleteness(mod);
+  if (empty.length > 0) {
+    const label = { m5: 'Modul 5', m6: 'Modul 6', m7: 'Modul 7' }[mod];
+    alert(`⚠ Masih ada ${empty.length} kolom yang belum diisi di ${label}.\nSemua kolom wajib diisi sebelum mengecek jawaban.\n\nKolom yang belum diisi akan ditandai merah.`);
+    highlightEmpty(empty);
+    return;
+  }
+
+  // 3. Score
+  let correct=0, total=0;
+  MODS[mod].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || !AK[id]) return;
+    total++;
+    const ok = isCorrect(id);
+    if (ok) correct++;
+    el.classList.remove('correct','wrong');
+    el.classList.add(ok ? 'correct' : 'wrong');
+  });
+
+  // 4. Lock permanently
+  lockAll(mod);
+
+  // 5. Show answer hints for wrong fields
+  MODS[mod].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || !AK[id]) return;
+    const hint = document.getElementById('hint_' + id);
+    if (!hint) return;
+    if (el.classList.contains('wrong')) {
+      hint.textContent = '✓ Jawaban: ' + formatAns(AK[id]);
+      hint.classList.add('show');
+    } else {
+      hint.classList.remove('show');
+    }
+  });
+
+  // 6. Save to localStorage (one-shot)
+  saveState(mod);
+
+  // 7. Show result and disable reset
+  const pct = Math.round(correct/total*100);
+  showResult(mod, correct, total, pct);
+  showLockedBanner(mod);
+  updateScores();
+}
+
+function showResult(mod, correct, total, pct) {
+  const card = document.getElementById('res_'+mod);
+  const title = document.getElementById('res_'+mod+'_title');
+  const detail = document.getElementById('res_'+mod+'_detail');
+  const stamp = document.getElementById('stamp_'+mod);
+  let cls, stampTxt, titleTxt;
+  if (pct >= 80) { cls='pass'; stampTxt='LULUS'; titleTxt='✓ Lulus — Nilai '+pct+'%'; }
+  else if (pct >= 60) { cls='warn'; stampTxt='REVISI'; titleTxt='⚠ Hampir — Nilai '+pct+'%'; }
+  else { cls='fail'; stampTxt='REVISI'; titleTxt='✗ Perlu Perbaikan — Nilai '+pct+'%'; }
+  card.className='result-card show '+cls;
+  title.textContent=titleTxt;
+  detail.textContent='Skor: '+correct+' benar dari '+total+' item yang dinilai. '+(pct<100?'Kolom merah menunjukkan jawaban yang perlu dikoreksi.':'Semua jawaban benar!')
+    +' — Jawaban telah dikunci permanen di perangkat ini.';
+  stamp.textContent=stampTxt;
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Reset is permanently disabled after check — kept only for UX before first check
+function resetMod(mod) {
+  if (lockedMods[mod]) {
+    alert('⛔ Jawaban sudah dikunci permanen di perangkat ini dan tidak dapat diulang.');
+    return;
+  }
+  if (!confirm('Reset akan menghapus semua jawaban yang sudah diisi di modul ini. Lanjutkan?')) return;
+  MODS[mod].forEach(id => {
+    const el=document.getElementById(id);
+    if (!el) return;
+    el.value='';
+    el.classList.remove('correct','wrong','locked');
+    el.removeAttribute('readonly');
+    el.style.pointerEvents='';
+    el.style.borderColor='';
+    el.style.background='';
+    const hint=document.getElementById('hint_'+id);
+    if (hint) hint.classList.remove('show');
+  });
+  document.getElementById('res_'+mod).className='result-card';
+  document.getElementById('btn_check_'+mod).classList.remove('locked');
+  updateScores();
+}
+
+function updateScores() {
+  let grandOk=0, grandTot=0;
+  ['m5','m6','m7'].forEach(mod => {
+    let ok=0, tot=0;
+    MODS[mod].forEach(id => {
+      if (!AK[id]) return;
+      tot++;
+      if(isCorrect(id)) ok++;
+    });
+    const chip=document.getElementById('sc'+mod.slice(1));
+    chip.textContent=lockedMods[mod]?ok+'/'+tot:'–';
+    chip.className='score-chip'+(lockedMods[mod]&&ok===tot?' done':'');
+    if(lockedMods[mod]){ grandOk+=ok; grandTot+=tot; }
+  });
+  const checked=Object.values(lockedMods).filter(Boolean).length;
+  document.getElementById('scTotal').textContent=checked>0?grandOk+'/'+grandTot:'–';
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Build G2 table
+const bulan=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const bKeys=['jan','feb','mar','apr','mei','jun','jul','agu','sep','okt','nov','des'];
+(function buildG2(){
+  const tb=document.getElementById('g2body');
+  bKeys.forEach((k,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${bulan[i]}</td><td class="center"><input class="cell-input" id="g2_tgl_${k}" oninput="live(this)"></td><td class="num-cell"><input class="cell-input right-align" id="g2_rp_${k}" oninput="live(this)" placeholder="0"></td><td class="num-cell"><input class="cell-input right-align" id="g2_tot_${k}" oninput="live(this)" placeholder="0"></td>`;
+    tb.appendChild(tr);
+  });
+  for(let i=0;i<3;i++){
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td></td><td></td><td></td><td></td>';
+    tb.appendChild(tr);
+  }
+})();
+
+// Build catatan lines
+(function buildCatatan(){
+  const div=document.getElementById('cat_h');
+  if(!div) return;
+  for(let i=0;i<8;i++){
+    const inp=document.createElement('input');
+    inp.type='text'; inp.className='catatan-line';
+    div.appendChild(inp);
+  }
+})();
+
+// ── ON LOAD: restore any previously-checked modules from localStorage ──
+(function restoreAll() {
+  ['m5','m6','m7'].forEach(mod => {
+    const restored = restoreState(mod);
+    if (!restored) return;
+
+    // Re-run scoring silently
+    let correct=0, total=0;
+    MODS[mod].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || !AK[id]) return;
+      total++;
+      const ok = isCorrect(id);
+      if (ok) correct++;
+      el.classList.remove('correct','wrong');
+      el.classList.add(ok ? 'correct' : 'wrong');
+    });
+
+    lockAll(mod);
+
+    // Show hints
+    MODS[mod].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || !AK[id]) return;
+      const hint = document.getElementById('hint_' + id);
+      if (!hint) return;
+      if (el.classList.contains('wrong')) {
+        hint.textContent = '✓ Jawaban: ' + formatAns(AK[id]);
+        hint.classList.add('show');
+      }
+    });
+
+    const pct = Math.round(correct/total*100);
+    showResult(mod, correct, total, pct);
+    showLockedBanner(mod);
+  });
+  updateScores();
+})();
+
+// ── SAVE AS PDF ──
+function savePDF(mod) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('print-target'));
+  document.getElementById(mod).classList.add('print-target');
+  const labels = { m5: 'Modul5_BebanDibayarDimuka', m6: 'Modul6_Investasi', m7: 'Modul7_AsetTetap' };
+  const nama = document.getElementById('mhs_nama').value.trim() || 'Mahasiswa';
+  const origTitle = document.title;
+  document.title = 'KKA_PTSUGUS_' + labels[mod] + '_' + nama;
+  window.print();
+  document.title = origTitle;
+  document.getElementById(mod).classList.remove('print-target');
+}
+</script>
+</body>
+</html>
